@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados
+  mongodb:
+    image: mongo:latest
+    container_name: ds1_mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+      MONGO_INITDB_DATABASE: darksouls1_calculator
+    ports:
+      - "${DB_PORT}:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
