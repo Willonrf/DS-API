@@ -1,98 +1,243 @@
+# 🗡️ Dark Souls 1 Combat Calculator - API (`ds-api`)
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status Em Desenvolvimento" />
+  <img src="https://img.shields.io/badge/NestJS-v11-red?style=for-the-badge&logo=nestjs" alt="NestJS" />
+  <img src="https://img.shields.io/badge/Fastify-v11-black?style=for-the-badge&logo=fastify" alt="Fastify" />
+  <img src="https://img.shields.io/badge/MongoDB-v7-green?style=for-the-badge&logo=mongodb" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/TypeScript-v5-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📌 Sobre o Projeto & Escopo
 
-## Description
+O **`ds-api`** é uma API backend desenvolvida para prover dados detalhados e estruturados sobre o universo de **Dark Souls 1** de maneira rápida e otimizada para consumo por uma aplicação frontend.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 📐 Divisão de Responsabilidades (Backend vs. Frontend)
 
-## Project setup
+- **Backend (`ds-api`)**:
+  - Atua como provedor central de dados para a aplicação.
+  - Armazena e expõe informações de bosses/inimigos, atributos base, estatísticas defensivas (físicas e elementais), multiplicadores de New Game Plus (NG+) e conjuntos de ataques (motion values, tipo de dano, stamina, se é parryável ou bloqueável).
+  - Futuramente irá expor dados de equipamentos (armas, armaduras, anéis) e itens consumíveis.
+  - Desenvolvido com **NestJS + Fastify + MongoDB** com foco em alta performance e baixa latência de resposta.
 
-```bash
-$ npm install
+- **Frontend (Calculadora Client-Side)**:
+  - Consome os dados fornecidos por esta API conforme solicitado pelo usuário.
+  - Realiza o cálculo no **client-side** de interações de combate em formato de relatório entre o personagem (Character Build do Dark Souls 1) e o inimigo/boss escolhido.
+  - Processa lógicas de cálculo de dano, eficácia de defesas, balanço de stamina e absorções.
+
+---
+
+## 🛠️ Tecnologias e Ferramentas
+
+- **Framework Core:** [NestJS](https://nestjs.com/) (v11)
+- **HTTP Adapter:** [Fastify](https://www.fastify.io/) (para respostas de altíssima velocidade)
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
+- **Banco de Dados:** [MongoDB](https://www.mongodb.com/)
+- **ORM:** [TypeORM](https://typeorm.io/) (com driver para MongoDB)
+- **Validação & Transformação:** `class-validator`, `class-transformer` e `joi`
+- **Containerização:** [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+## 📁 Estrutura do Projeto (`src/`)
+
+O desenvolvimento da lógica do sistema está concentrado exclusivamente dentro do diretório `src/`
+
+```text
+src/
+├── app.module.ts            # Módulo raiz (configuração de variáveis de ambiente e conexão MongoDB)
+├── main.ts                  # Ponto de entrada (Inicialização com Fastify, Pipes Globais e CORS)
+├── app.controller.ts        # Controller raiz
+├── app.service.ts           # Service raiz
+└── bosses/                  # Módulo de Bosses / Inimigos
+    ├── bosses.controller.ts # Endpoints HTTP do recurso bosses
+    ├── bosses.service.ts    # Lógica de negócio, consultas e seed do banco
+    ├── bosses.module.ts     # Módulo encapsulador de Bosses
+    ├── dto/                 # Data Transfer Objects com validação rigorosa
+    │   ├── create-boss.dto.ts
+    │   └── update-boss.dto.ts
+    └── entities/            # Schemas e entidades do TypeORM / MongoDB
+        └── boss.entity.ts
 ```
 
-## Compile and run the project
+---
+
+## 🚀 Guia de Uso
+
+### 📋 Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (v18+)
+- [npm](https://www.npmjs.com/)
+- [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/) _(opcional, recomendado para subir o MongoDB rapidamente)_
+
+---
+
+### ⚙️ Configuração do Ambiente
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/SeuUsuario/ds-api.git
+   cd ds-api
+   ```
+
+2. Crie o arquivo de variáveis de ambiente `.env` baseado no `.env.example`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Exemplo de configuração do arquivo `.env`:
+   ```env
+   PORT=3030
+
+   DB_HOST=localhost
+   DB_PORT=27017
+   DB_NAME=darksouls1_calculator
+   DB_USER=root
+   DB_PASS=example
+
+   MONGO_URI=mongodb://root:example@localhost:27017/darksouls1_calculator?authSource=admin
+   ```
+
+---
+
+### 🐳 Inicializando o Banco de Dados com Docker
+
+Para subir a instância do MongoDB localmente utilizando o Docker Compose:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose up -d
 ```
 
-## Run tests
+---
+
+### 📦 Instalação e Execução
+
+1. Instale as dependências do projeto:
+
+   ```bash
+   npm install
+   ```
+
+2. Inicie o servidor em modo de desenvolvimento (watch mode):
+
+   ```bash
+   npm run start:dev
+   ```
+
+3. Para executar em ambiente de produção:
+   ```bash
+   npm run build
+   npm run start:prod
+   ```
+
+A API estará rodando por padrão em `http://localhost:3030`.
+
+---
+
+## 📡 Endpoints da API
+
+### 👹 Recurso de Bosses (`/bosses`)
+
+| Método | Endpoint        | Descrição                                                                               |
+| :----- | :-------------- | :-------------------------------------------------------------------------------------- |
+| `POST` | `/bosses/seed`  | Executa o seed inicial populando a base de dados com bosses padrão (ex: _Asylum Demon_) |
+| `GET`  | `/bosses`       | Retorna a lista completa de bosses cadastrados                                          |
+| `GET`  | `/bosses/:name` | Busca as informações e estatísticas detalhadas de um boss pelo nome                     |
+| `POST` | `/bosses`       | Cadastra um novo boss (com validação estrita via DTO)                                   |
+
+#### Exemplo de Payload para Cadastro de Boss (`POST /bosses`):
+
+```json
+{
+  "name": "Asylum Demon",
+  "baseHP": 813,
+  "baseDefenses": {
+    "standard": 90,
+    "strike": 90,
+    "slash": 90,
+    "thrust": 90,
+    "magic": 111,
+    "fire": 68,
+    "lightning": 111
+  },
+  "baseAttackRatings": {
+    "physical": 120,
+    "magic": 0,
+    "fire": 0,
+    "lightning": 0
+  },
+  "isParryableOverall": false,
+  "ngMultipliers": [
+    {
+      "cycle": 0,
+      "hpMultiplier": 1.0,
+      "damageMultiplier": 1.0,
+      "defenseMultiplier": 1.0
+    },
+    {
+      "cycle": 1,
+      "hpMultiplier": 2.37,
+      "damageMultiplier": 2.15,
+      "defenseMultiplier": 1.05
+    }
+  ],
+  "attacks": [
+    {
+      "attackName": "Hammer Smash",
+      "motionValue": 1.2,
+      "damageType": "strike",
+      "isParryable": false,
+      "isBlockable": true,
+      "staminaDamageBase": 60
+    },
+    {
+      "attackName": "Flying Butt Drop",
+      "motionValue": 1.5,
+      "damageType": "strike",
+      "isParryable": false,
+      "isBlockable": false,
+      "staminaDamageBase": 100
+    }
+  ]
+}
+```
+
+---
+
+## 🧪 Testes e Qualidade
+
+O projeto inclui rotinas automatizadas de testes unitários e de integração (E2E), além de linter e formatador de código.
 
 ```bash
-# unit tests
-$ npm run test
+# Executar testes unitários (Jest)
+npm run test
 
-# e2e tests
-$ npm run test:e2e
+# Executar testes E2E
+npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# Gerar relatório de cobertura de testes
+npm run test:cov
+
+# Executar Linter (ESLint)
+npm run lint
+
+# Formatar código (Prettier)
+npm run format
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🗺️ Roadmap de Desenvolvimento
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- [x] Arquitetura base NestJS v11 + Fastify + TypeScript
+- [x] Integração com MongoDB via TypeORM e Docker Compose
+- [x] Modelagem, DTOs e Endpoints para Bosses / Inimigos
+- [ ] Módulo de Armas (Weapon Stats, Scaling STR/DEX/INT/FTH, Infusões)
+- [ ] Módulo de Armaduras (Sets, Defesas Físicas/Elementais, Resistências a Status)
+- [ ] Módulo de Anéis e Buffs (Modifiers passivos de combate)
+- [ ] Módulo de Itens e Consumíveis
+- [ ] Otimizações adicionais de cache para consultas ultrarrápidas do frontend
