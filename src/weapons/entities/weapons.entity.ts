@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 
 export type ScalingGrade = 'S' | 'A' | 'B' | 'C' | 'D' | 'E' | '-';
 
-export interface WeaponRequirements {
+export interface WeaponsRequirements {
   strength: number;
   dexterity: number;
   intelligence: number;
@@ -31,7 +31,7 @@ export interface ScalingTiers {
 }
 
 @Entity('Weapons')
-export class Weapon {
+export class Weapons {
   @ObjectIdColumn()
   _id!: ObjectId;
 
@@ -54,7 +54,7 @@ export class Weapon {
   scalingGrades!: ScalingTiers;
 
   @Column()
-  requirements!: WeaponRequirements;
+  requirements!: WeaponsRequirements;
 
   @Column()
   isSpecial!: boolean; // Se usa Twinkling Titanite ou Demon Titanite

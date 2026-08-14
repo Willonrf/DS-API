@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BossesModule } from './bosses/bosses.module';
-import { WeaponModule } from './weapon/weapon.module';
+import { WeaponsModule } from './weapons/weapons.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -28,7 +28,7 @@ import * as Joi from 'joi';
       }),
     }),
     BossesModule,
-    WeaponModule,
+    WeaponsModule,
   ],
   controllers: [],
   providers: [],

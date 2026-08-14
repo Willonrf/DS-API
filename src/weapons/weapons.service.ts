@@ -1,20 +1,20 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
-import { Weapon } from './entities/weapon.entity';
-import { CreateWeaponDto } from './dto/create-weapon.dto';
+import { Weapons } from './entities/weapons.entity';
+import { CreateWeaponsDto } from './dto/create-weapons.dto';
 
 @Injectable()
-export class WeaponService {
-  private readonly logger = new Logger(WeaponService.name);
+export class WeaponsService {
+  private readonly logger = new Logger(WeaponsService.name);
 
   constructor(
-    @InjectRepository(Weapon)
-    private readonly weaponRepository: MongoRepository<Weapon>,
+    @InjectRepository(Weapons)
+    private readonly weaponsRepository: MongoRepository<Weapons>,
   ) {}
 
   async seedWeapons(): Promise<string> {
-    const count = await this.weaponRepository.count();
+    const count = await this.weaponsRepository.count();
 
     if (count > 0) {
       this.logger.warn(
@@ -76,9 +76,9 @@ export class WeaponService {
       },
     ];
 
-    const entities = this.weaponRepository.create(weaponsToSeed);
+    const entities = this.weaponsRepository.create(weaponsToSeed);
 
-    await this.weaponRepository.save(entities);
+    await this.weaponsRepository.save(entities);
 
     this.logger.log(
       `Seed de armas executado com sucesso! ${entities.length} arma(s) inserida(s).`,
@@ -86,16 +86,16 @@ export class WeaponService {
     return 'Weapon seed executed successfully!';
   }
 
-  async findAll(): Promise<Weapon[]> {
-    const weapon = await this.weaponRepository.find();
+  async findAll(): Promise<Weapons[]> {
+    const weapon = await this.weaponsRepository.find();
     this.logger.log(
       `Buscando todos os bosses. Total encontrado: ${weapon.length}`,
     );
     return weapon;
   }
 
-  async findByName(name: string): Promise<Weapon> {
-    const weapon = await this.weaponRepository.findOneBy({ name });
+  async findByName(name: string): Promise<Weapons> {
+    const weapon = await this.weaponsRepository.findOneBy({ name });
 
     if (!weapon) {
       throw new NotFoundException(
@@ -106,10 +106,10 @@ export class WeaponService {
     return weapon;
   }
 
-  async create(createWeaponDto: CreateWeaponDto): Promise<Weapon> {
-    const newWeapon = this.weaponRepository.create(createWeaponDto);
+  async create(createWeaponsDto: CreateWeaponsDto): Promise<Weapons> {
+    const newWeapon = this.weaponsRepository.create(createWeaponsDto);
 
-    const savedWeapon = await this.weaponRepository.save(newWeapon);
+    const savedWeapon = await this.weaponsRepository.save(newWeapon);
 
     this.logger.log(`Novo Weapon cadastrado via API: ${savedWeapon.name}`);
     return savedWeapon;

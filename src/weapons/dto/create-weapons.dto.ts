@@ -36,7 +36,7 @@ export class WeaponRequirementsDto {
   @IsNumber() faith!: number;
 }
 
-export class CreateWeaponDto {
+export class CreateWeaponsDto {
   @IsString() name!: string;
   @IsString() category!: string;
   @IsString() upgradePath!: string;
