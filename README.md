@@ -236,7 +236,7 @@ npm run format
 - [x] Arquitetura base NestJS v11 + Fastify + TypeScript
 - [x] Integração com MongoDB via TypeORM e Docker Compose
 - [x] Modelagem, DTOs e Endpoints para Bosses / Inimigos
-- [ ] Módulo de Armas (Weapon Stats, Scaling STR/DEX/INT/FTH, Infusões)
+- [x] Módulo de Armas (Weapon Stats, Scaling STR/DEX/INT/FTH, Infusões)
 - [ ] Módulo de Armaduras (Sets, Defesas Físicas/Elementais, Resistências a Status)
 - [ ] Módulo de Anéis e Buffs (Modifiers passivos de combate)
 - [ ] Módulo de Itens e Consumíveis
