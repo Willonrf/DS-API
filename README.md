@@ -237,7 +237,7 @@ npm run format
 - [x] Integração com MongoDB via TypeORM e Docker Compose
 - [x] Modelagem, DTOs e Endpoints para Bosses / Inimigos
 - [x] Módulo de Armas (Weapon Stats, Scaling STR/DEX/INT/FTH, Infusões)
-- [ ] Módulo de Armaduras (Sets, Defesas Físicas/Elementais, Resistências a Status)
+- [x] Módulo de Armaduras (Sets, Defesas Físicas/Elementais, Resistências a Status)
 - [ ] Módulo de Anéis e Buffs (Modifiers passivos de combate)
 - [ ] Módulo de Itens e Consumíveis
 - [ ] Otimizações adicionais de cache para consultas ultrarrápidas do frontend

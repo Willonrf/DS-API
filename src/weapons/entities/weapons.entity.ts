@@ -39,13 +39,13 @@ export class Weapons {
   name!: string;
 
   @Column()
-  category!: string; // Ex: 'Straight Sword', 'Greatsword', 'Catalyst'
+  category!: string;
 
   @Column()
-  upgradePath!: string; // Ex: 'Normal', 'Crystal', 'Lightning', 'Chaos', 'Divine'
+  upgradePath!: string;
 
   @Column()
-  maxUpgradeLevel!: number; // Ex: 15 para Normal, 5 para Boss/Twinkling
+  maxUpgradeLevel!: number;
 
   @Column()
   baseDamage!: DamageValues;
