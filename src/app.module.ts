@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BossesModule } from './bosses/bosses.module';
 import { WeaponsModule } from './weapons/weapons.module';
 import { ArmorsModule } from './armors/armors.module';
+import { RingsModule } from './rings/rings.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -31,6 +32,7 @@ import * as Joi from 'joi';
     BossesModule,
     WeaponsModule,
     ArmorsModule,
+    RingsModule,
   ],
   controllers: [],
   providers: [],
