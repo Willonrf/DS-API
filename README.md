@@ -238,6 +238,6 @@ npm run format
 - [x] Modelagem, DTOs e Endpoints para Bosses / Inimigos
 - [x] Módulo de Armas (Weapon Stats, Scaling STR/DEX/INT/FTH, Infusões)
 - [x] Módulo de Armaduras (Sets, Defesas Físicas/Elementais, Resistências a Status)
-- [ ] Módulo de Anéis e Buffs (Modifiers passivos de combate)
-- [ ] Módulo de Itens e Consumíveis
+- [x] Módulo de Anéis e Buffs (Modifiers passivos de combate)
+- [x] Módulo de Itens e Consumíveis
 - [ ] Otimizações adicionais de cache para consultas ultrarrápidas do frontend

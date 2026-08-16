@@ -5,6 +5,7 @@ import { BossesModule } from './bosses/bosses.module';
 import { WeaponsModule } from './weapons/weapons.module';
 import { ArmorsModule } from './armors/armors.module';
 import { RingsModule } from './rings/rings.module';
+import { ConsumablesModule } from './consumables/consumables.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -33,6 +34,7 @@ import * as Joi from 'joi';
     WeaponsModule,
     ArmorsModule,
     RingsModule,
+    ConsumablesModule,
   ],
   controllers: [],
   providers: [],
