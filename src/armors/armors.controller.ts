@@ -27,7 +27,7 @@ export class ArmorsController {
   async create(@Body() createArmorDto: CreateArmorDto) {
     const savedArmor = await this.armorsService.create(createArmorDto);
     return {
-      message: 'Armor cadastrado e validado com sucesso!',
+      message: 'Armor cadastrados e validado com sucesso!',
       Armor: savedArmor,
     };
   }
