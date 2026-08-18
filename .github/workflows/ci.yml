@@ -6,12 +6,12 @@ on:
       - master
 
 jobs:
-  build-and-validate:
-    name: Build, Lint and Test
+  validate-code:
+    name: Validate and Build
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: ⚙️ Setup Node.js
@@ -23,11 +23,14 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
+      - name: 🎨 Check Formatting
+        run: npx prettier --check "src/**/*.ts" "test/**/*.ts"
+
       - name: 🔍 Run Linter
         run: npm run lint
 
-      - name: 🏗️ Build Application
-        run: npm run build
-
       - name: 🧪 Run Tests
         run: npm run test
+
+      - name: 🏗️ Build Application
+        run: npm run build
