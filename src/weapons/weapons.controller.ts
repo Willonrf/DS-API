@@ -6,9 +6,11 @@ import {
   Param,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { WeaponsService } from './weapons.service';
 import { CreateWeaponsDto } from './dto/create-weapons.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('weapon')
 export class WeaponsController {
@@ -31,8 +33,8 @@ export class WeaponsController {
   }
 
   @Get()
-  async findAll() {
-    return this.weaponsService.findAll();
+  findAll(@Query() query: CursorPaginationDto) {
+    return this.weaponsService.findAll(query);
   }
 
   @Get(':name')

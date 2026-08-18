@@ -1,8 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
+import { MongoRepository, MoreThan } from 'typeorm';
 import { Weapons } from './entities/weapons.entity';
 import { CreateWeaponsDto } from './dto/create-weapons.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class WeaponsService {
@@ -86,12 +88,32 @@ export class WeaponsService {
     return 'Weapon seed executed successfully!';
   }
 
-  async findAll(): Promise<Weapons[]> {
-    const weapon = await this.weaponsRepository.find();
-    this.logger.log(
-      `Buscando todos os bosses. Total encontrado: ${weapon.length}`,
-    );
-    return weapon;
+  async findAll(query: CursorPaginationDto) {
+    const { limit = 10, cursor } = query;
+    const take = limit + 1;
+
+    const weapons = await this.weaponsRepository.find({
+      take: take,
+      where: cursor ? { _id: MoreThan(new ObjectId(cursor)) } : {},
+      order: { _id: 'ASC' },
+    });
+
+    let nextCursor: string | null = null;
+
+    if (weapons.length > limit) {
+      const nextItem = weapons.pop();
+      if (nextItem && nextItem._id) {
+        nextCursor = nextItem._id.toString();
+      }
+    }
+
+    return {
+      data: weapons,
+      meta: {
+        nextCursor,
+        hasNextPage: nextCursor !== null,
+      },
+    };
   }
 
   async findByName(name: string): Promise<Weapons> {

@@ -6,9 +6,11 @@ import {
   Param,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { ArmorsService } from './armors.service';
 import { CreateArmorDto } from './dto/create-armor.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('armors')
 export class ArmorsController {
@@ -31,8 +33,8 @@ export class ArmorsController {
   }
 
   @Get()
-  async findAll() {
-    return this.armorsService.findAll();
+  findAll(@Query() query: CursorPaginationDto) {
+    return this.armorsService.findAll(query);
   }
 
   @Get(':name')

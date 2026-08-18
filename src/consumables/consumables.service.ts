@@ -1,8 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
+import { MongoRepository, MoreThan } from 'typeorm';
 import { Consumable } from './entities/consumable.entity';
 import { CreateConsumableDto } from './dto/create-consumable.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class ConsumablesService {
@@ -35,12 +37,32 @@ export class ConsumablesService {
     return 'Seed executed successfully!';
   }
 
-  async findAll(): Promise<Consumable[]> {
-    const consumables = await this.consumableRepository.find();
-    this.logger.log(
-      `Buscando todos os bosses. Total encontrado: ${consumables.length}`,
-    );
-    return consumables;
+  async findAll(query: CursorPaginationDto) {
+    const { limit = 10, cursor } = query;
+    const take = limit + 1;
+
+    const bosses = await this.consumableRepository.find({
+      take: take,
+      where: cursor ? { _id: MoreThan(new ObjectId(cursor)) } : {},
+      order: { _id: 'ASC' },
+    });
+
+    let nextCursor: string | null = null;
+
+    if (bosses.length > limit) {
+      const nextItem = bosses.pop();
+      if (nextItem && nextItem._id) {
+        nextCursor = nextItem._id.toString();
+      }
+    }
+
+    return {
+      data: bosses,
+      meta: {
+        nextCursor,
+        hasNextPage: nextCursor !== null,
+      },
+    };
   }
 
   async findByName(name: string): Promise<Consumable> {

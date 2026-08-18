@@ -6,9 +6,11 @@ import {
   Get,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { ConsumablesService } from './consumables.service';
 import { CreateConsumableDto } from './dto/create-consumable.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('consumables')
 export class ConsumablesController {
@@ -33,12 +35,12 @@ export class ConsumablesController {
   }
 
   @Get()
-  async findAll() {
-    return await this.consumablesService.findAll();
+  findAll(@Query() query: CursorPaginationDto) {
+    return this.consumablesService.findAll(query);
   }
 
   @Get(':name')
-  async findByName(@Param('name') name: string) {
-    return await this.consumablesService.findByName(name);
+  findByName(@Param('name') name: string) {
+    return this.consumablesService.findByName(name);
   }
 }

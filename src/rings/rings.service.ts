@@ -1,8 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
+import { MongoRepository, MoreThan } from 'typeorm';
 import { Ring } from './entities/ring.entity';
 import { CreateRingDto } from './dto/create-ring.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class RingsService {
@@ -35,12 +37,32 @@ export class RingsService {
     return 'Weapon seed executed successfully!';
   }
 
-  async findAll(): Promise<Ring[]> {
-    const ring = await this.ringRepository.find();
-    this.logger.log(
-      `Buscando todos os bosses. Total encontrado: ${ring.length}`,
-    );
-    return ring;
+  async findAll(query: CursorPaginationDto) {
+    const { limit = 10, cursor } = query;
+    const take = limit + 1;
+
+    const bosses = await this.ringRepository.find({
+      take: take,
+      where: cursor ? { _id: MoreThan(new ObjectId(cursor)) } : {},
+      order: { _id: 'ASC' },
+    });
+
+    let nextCursor: string | null = null;
+
+    if (bosses.length > limit) {
+      const nextItem = bosses.pop();
+      if (nextItem && nextItem._id) {
+        nextCursor = nextItem._id.toString();
+      }
+    }
+
+    return {
+      data: bosses,
+      meta: {
+        nextCursor,
+        hasNextPage: nextCursor !== null,
+      },
+    };
   }
 
   async findByName(name: string): Promise<Ring> {

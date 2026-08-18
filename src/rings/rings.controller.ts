@@ -6,9 +6,11 @@ import {
   Param,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { RingsService } from './rings.service';
 import { CreateRingDto } from './dto/create-ring.dto';
+import { CursorPaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('rings')
 export class RingsController {
@@ -31,8 +33,8 @@ export class RingsController {
   }
 
   @Get()
-  async findAll() {
-    return this.ringsService.findAll();
+  findAll(@Query() query: CursorPaginationDto) {
+    return this.ringsService.findAll(query);
   }
 
   @Get(':name')
