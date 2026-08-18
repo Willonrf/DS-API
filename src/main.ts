@@ -5,6 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import fastifyCompress from '@fastify/compress';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,6 +25,11 @@ async function bootstrap() {
     origin: '*',
     methods: 'GET,POST',
     allowedHeaders: 'Content-Type,Authorization',
+  });
+
+  await app.register(fastifyCompress, {
+    encodings: ['br', 'gzip', 'deflate'],
+    threshold: 1024,
   });
 
   await app.listen(process.env.PORT ?? 3000);
