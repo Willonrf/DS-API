@@ -27,7 +27,7 @@ export class BossesController {
   async create(@Body() createBossDto: CreateBossDto) {
     const savedBoss = await this.bossesService.create(createBossDto);
     return {
-      message: 'Boss cadastrado e validado com sucesso!',
+      message: 'Bosses cadastrado e validado com sucesso!',
       boss: savedBoss,
     };
   }
