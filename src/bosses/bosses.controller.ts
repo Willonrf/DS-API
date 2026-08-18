@@ -11,7 +11,9 @@ import {
 import { BossesService } from './bosses.service';
 import { CreateBossDto } from './dto/create-boss.dto';
 import { CursorPaginationDto } from '../common/dtos/pagination.dto';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('bosses')
 @Controller('bosses')
 export class BossesController {
   constructor(private readonly bossesService: BossesService) {}
@@ -33,6 +35,7 @@ export class BossesController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Lista todos os chefões com paginação' })
   findAll(@Query() query: CursorPaginationDto) {
     return this.bossesService.findAll(query);
   }

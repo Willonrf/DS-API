@@ -6,6 +6,7 @@ import {
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import fastifyCompress from '@fastify/compress';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -31,6 +32,20 @@ async function bootstrap() {
     encodings: ['br', 'gzip', 'deflate'],
     threshold: 1024,
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('Dark Souls API')
+    .setDescription(
+      'API com os dados de Chefões e Armas do universo Dark Souls',
+    )
+    .setVersion('1.0')
+    .addTag('bosses', 'Rotas relacionadas aos Chefões')
+    .addTag('weapons', 'Rotas relacionadas às Armas')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
