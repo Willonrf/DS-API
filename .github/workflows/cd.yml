@@ -1,0 +1,19 @@
+name: Continuous Deployment
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: Trigger Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar o servidor para iniciar o Deploy
+        run: |
+          if [ -z "${{ secrets.DEPLOY_HOOK_URL }}" ]; then
+            echo "A secret DEPLOY_HOOK_URL não foi configurada."
+            exit 1
+          fi
+          curl -X POST "${{ secrets.DEPLOY_HOOK_URL }}"
+      - name: Sucesso
+          run: echo "🚀 Deploy disparado com sucesso para a produção!"
