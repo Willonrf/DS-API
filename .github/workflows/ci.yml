@@ -35,5 +35,8 @@ jobs:
       - name: 🧪 Run Tests with Coverage
         run: npm run test:cov
 
+      - name: 🧪 Run Tests e2e with Coverage
+        run: npm run test:e2e
+
       - name: 🏗️ Build Application
         run: npm run build
