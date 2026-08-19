@@ -80,7 +80,9 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*.module.ts", 
+      "!**/main.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
@@ -90,5 +92,13 @@
       "prettier --write",
       "eslint --fix"
     ]
-  }
+  },
+  "coverageThreshold": {
+      "global": {
+        "statements": 60,
+        "branches": 50,
+        "functions": 15,
+        "lines": 60
+      }
+    }
 }
