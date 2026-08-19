@@ -1,8 +1,15 @@
+import { FastifyInstance } from 'fastify';
+import { Server } from 'http';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from './../src/app.module';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
+import { AppModule } from './../src/app.module';
+import { ConfigService } from '@nestjs/config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -13,16 +20,39 @@ describe('AppController (e2e)', () => {
       .withExposedPorts(27017)
       .start();
 
-    const host = mongoContainer.getHost();
+    let host = mongoContainer.getHost();
+    if (host === 'localhost') {
+      host = '127.0.0.1';
+    }
     const port = mongoContainer.getMappedPort(27017);
-    process.env.MONGO_URI = `mongodb://${host}:${port}/dark_souls_test_db`;
+
+    const dynamicMongoUri = `mongodb://${host}:${port}/dark_souls_test_db`;
+
+    process.env.MONGO_URI = dynamicMongoUri;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(ConfigService)
+      .useValue({
+        get: (key: string) => {
+          if (key === 'MONGO_URI') return dynamicMongoUri;
+          if (key === 'PORT') return 3030;
+          return null;
+        },
+      })
+      .compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
+
     await app.init();
+
+    const fastifyInstance = app
+      .getHttpAdapter()
+      .getInstance() as FastifyInstance;
+    await fastifyInstance.ready();
   }, 60000);
 
   afterAll(async () => {
@@ -56,7 +86,7 @@ describe('AppController (e2e)', () => {
       isParryableOverall: false,
       ngMultipliers: [
         {
-          cycle: 1, // NG+
+          cycle: 1,
           hpMultiplier: 1.5,
           damageMultiplier: 1.5,
           defenseMultiplier: 1.1,
@@ -74,7 +104,9 @@ describe('AppController (e2e)', () => {
       ],
     };
 
-    const response = await request(app.getHttpServer())
+    const server = app.getHttpServer() as Server;
+
+    const response = await request(server)
       .post('/bosses')
       .send(novoBoss)
       .expect(201);

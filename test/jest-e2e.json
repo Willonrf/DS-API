@@ -11,5 +11,6 @@
     "!src/**/*.module.ts",
     "!src/main.ts"
   ],
-  "coverageDirectory": "coverage-e2e"
+  "coverageDirectory": "coverage-e2e",
+  "setupFiles": ["<rootDir>/test/setup-jest.ts"]
 }
