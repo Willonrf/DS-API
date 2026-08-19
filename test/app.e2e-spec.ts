@@ -1,46 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import { ConfigService } from '@nestjs/config';
 
 describe('AppController (e2e)', () => {
-  let app: NestFastifyApplication;
+  let app: INestApplication;
   let mongoContainer: StartedTestContainer;
 
   beforeAll(async () => {
-    mongoContainer = await new GenericContainer('mongo:6.0')
+    mongoContainer = await new GenericContainer('mongo:latest')
       .withExposedPorts(27017)
       .start();
 
     const host = mongoContainer.getHost();
     const port = mongoContainer.getMappedPort(27017);
-    const mongoUri = `mongodb://${host}:${port}`;
+    process.env.MONGO_URI = `mongodb://${host}:${port}/dark_souls_test_db`;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    })
-      .overrideProvider(ConfigService)
-      .useValue({
-        get: (key: string) => {
-          if (key === 'MONGO_URI') return mongoUri;
-          if (key === 'DB_NAME') return 'darksouls_e2e_test';
-          if (key === 'PORT') return 3030;
-          return process.env[key];
-        },
-      })
-      .compile();
+    }).compile();
 
-    app = moduleFixture.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
-    );
+    app = moduleFixture.createNestApplication();
     await app.init();
-
-    await app.getHttpAdapter().getInstance().ready();
   }, 60000);
 
   afterAll(async () => {
