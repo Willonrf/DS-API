@@ -17,7 +17,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: 📦 Install dependencies
@@ -34,6 +34,9 @@ jobs:
 
       - name: 🧪 Run Tests with Coverage
         run: npm run test:cov
+
+      - name: 🧪 Run Tests e2e with Coverage
+        run: npm run test:e2e
 
       - name: 🏗️ Build Application
         run: npm run build

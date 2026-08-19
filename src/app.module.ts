@@ -23,11 +23,9 @@ import * as Joi from 'joi';
       useFactory: (configService: ConfigService) => ({
         type: 'mongodb',
         url: configService.get<string>('MONGO_URI'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        useNewUrlParser: true,
-        logging: true,
+        useUnifiedTopology: true,
+        autoLoadEntities: true,
       }),
     }),
     BossesModule,
