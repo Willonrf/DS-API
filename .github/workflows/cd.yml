@@ -21,20 +21,20 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.1.7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51f6ba0c132cecc7f6c18471bfc0e6fc83b
+        uses: docker/setup-buildx-action@c47758b77c9746f4b2330b666a4220377402636f # v3.3.0
 
       - name: Build Docker image locally (for scanning)
-        uses: docker/build-push-action@ca5b266449f4afc5084a1b67d57ccd6f6372fc85
+        uses: docker/build-push-action@afed92cc177423e89547d079d8f3195204481008 # v5.3.0
         with:
           context: .
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-scan
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@18f2510ff376b89342716b2193239df541c5d446
+        uses: aquasecurity/trivy-action@5108619623838634517bbf08365f241a780e159c # v0.28.0
         with:
           image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-scan'
           format: 'sarif'
@@ -43,7 +43,7 @@ jobs:
           exit-code: '1'
 
       - name: Log in to the Container Registry
-        uses: docker/login-action@9780f0c4423c1054093951f224a313d42bc02f52
+        uses: docker/login-action@9780f0c4423c1054093951f224a313d42bc02f52 # v3.1.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -51,7 +51,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@8e5442c4ef9f787526f1e2d8f8d19755c6f74efa
+        uses: docker/metadata-action@8e5442c4ef9f787526f1e2d8f8d19755c6f74efa # v5.5.1
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -59,7 +59,7 @@ jobs:
             type=sha,format=short
 
       - name: Push Docker image to GHCR
-        uses: docker/build-push-action@ca5b266449f4afc5084a1b67d57ccd6f6372fc85
+        uses: docker/build-push-action@afed92cc177423e89547d079d8f3195204481008 # v5.3.0
         with:
           context: .
           push: true
