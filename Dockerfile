@@ -1,12 +1,10 @@
 FROM node:22-alpine AS builder
 
-RUN npm install -g npm@latest
-
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --ignore-scripts
 
 COPY . .
 
@@ -18,11 +16,15 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
+RUN npm install -g npm@latest --ignore-scripts
+
 COPY package*.json ./
 
-RUN npm install --production --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts
 
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
+
+USER node
 
 EXPOSE 3030
 
