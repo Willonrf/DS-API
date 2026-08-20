@@ -18,7 +18,7 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 
-RUN npm install --production
+RUN npm install --production --ignore-scripts
 
 COPY --from=builder /usr/src/app/dist ./dist
 
