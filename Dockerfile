@@ -16,7 +16,7 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-RUN npm install -g npm@latest --ignore-scripts
+RUN npm install -g npm@10.8.2 --ignore-scripts
 
 COPY package*.json ./
 
