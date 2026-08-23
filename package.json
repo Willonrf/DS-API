@@ -122,7 +122,7 @@
   },
   "overrides": {
     "@eslint/eslintrc": {
-      "brace-expansion": "^5.0.9"
+      "brace-expansion": "^2.1.4"
     },
     "@semantic-release/npm": {
       "brace-expansion": "^5.0.9"
