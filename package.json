@@ -38,6 +38,7 @@
     "mongodb": "^6.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "testcontainers": "^12.1.0",
     "typeorm": "^0.3.20",
     "typescript-eslint": "^8.68.0"
   },
