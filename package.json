@@ -122,10 +122,10 @@
   },
   "overrides": {
     "@eslint/eslintrc": {
-      "brace-expansion": "^5.0.9"
+      "minimatch": "^10.0.0"
     },
     "@semantic-release/npm": {
-      "brace-expansion": "^5.0.9"
+      "minimatch": "^10.0.0"
     }
   }
 }
