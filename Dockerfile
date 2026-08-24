@@ -16,11 +16,13 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-RUN npm install -g npm@12.0.2 --ignore-scripts
-
 COPY package*.json ./
 
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts \
+    && npm cache clean --force \
+    && rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm \
+    && rm -f /usr/local/bin/npx
 
 COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
 
