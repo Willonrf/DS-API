@@ -35,7 +35,7 @@
     "class-validator": "^0.15.1",
     "eslint-config-prettier": "^10.1.8",
     "joi": "^18.2.3",
-    "mongodb": "^6.12.0",
+    "mongodb": "^7.5.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "testcontainers": "^12.1.0",
